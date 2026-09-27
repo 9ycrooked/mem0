@@ -9,6 +9,7 @@ import {
   FolderInput,
   GalleryVerticalEnd,
   KeyRound,
+  LayoutDashboard,
   Settings,
   Tags,
   Users,
@@ -16,6 +17,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { RootState } from "@/store/store";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -48,6 +50,8 @@ export function MainNav({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
+  // 自维护 fork：导航文案接 i18n（zh / en）
+  const { t } = useTranslation("common");
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.layout.isSidebarCollapsed,
   );
@@ -66,24 +70,31 @@ export function MainNav({
               <div className="flex flex-col gap-0">
                 {!isSidebarCollapsed && (
                   <SidebarGroupLabel className="mb-0">
-                    ACTIVITY
+                    {t("nav.groupActivity")}
                   </SidebarGroupLabel>
                 )}
                 {[
                   {
-                    title: "Requests",
+                    // 自维护 fork 新增：仪表盘入口
+                    title: t("nav.dashboard"),
+                    url: "/dashboard/overview",
+                    icon: LayoutDashboard,
+                    active: pathname === "/dashboard/overview",
+                  },
+                  {
+                    title: t("nav.requests"),
                     url: "/dashboard/requests",
                     icon: Activity,
                     active: pathname === "/dashboard/requests",
                   },
                   {
-                    title: "Memories",
+                    title: t("nav.memories"),
                     url: "/dashboard/memories",
                     icon: GalleryVerticalEnd,
                     active: pathname === "/dashboard/memories",
                   },
                   {
-                    title: "Entities",
+                    title: t("nav.entities"),
                     url: "/dashboard/entities",
                     icon: Users,
                     active: pathname === "/dashboard/entities",
@@ -130,7 +141,7 @@ export function MainNav({
                 {!isSidebarCollapsed && (
                   <CollapsibleTrigger asChild>
                     <SidebarGroupLabel className="cursor-pointer mb-0">
-                      CLOUD FEATURES
+                      {t("nav.groupCloudFeatures")}
                       <ChevronDown
                         className={cn(
                           "size-3 transition-transform duration-200",
@@ -143,22 +154,22 @@ export function MainNav({
                 <CollapsibleContent className="flex flex-col gap-0">
                   {[
                     {
-                      title: "Categories",
+                      title: t("nav.categories"),
                       url: "/dashboard/categories",
                       icon: Tags,
                     },
                     {
-                      title: "Webhooks",
+                      title: t("nav.webhooks"),
                       url: "/dashboard/webhooks",
                       icon: WebhookIcon,
                     },
                     {
-                      title: "Analytics",
+                      title: t("nav.analytics"),
                       url: "/dashboard/analytics",
                       icon: ChartLine,
                     },
                     {
-                      title: "Export",
+                      title: t("nav.export"),
                       url: "/dashboard/export",
                       icon: FolderInput,
                     },
@@ -206,24 +217,24 @@ export function MainNav({
               <div className="flex flex-col gap-0">
                 {!isSidebarCollapsed && (
                   <SidebarGroupLabel className="mb-0">
-                    ACCOUNT
+                    {t("nav.groupAccount")}
                   </SidebarGroupLabel>
                 )}
                 {[
                   {
-                    title: "API Keys",
+                    title: t("nav.apiKeys"),
                     url: "/dashboard/api-keys",
                     icon: KeyRound,
                     active: pathname === "/dashboard/api-keys",
                   },
                   {
-                    title: "Configuration",
+                    title: t("nav.configuration"),
                     url: "/dashboard/configuration",
                     icon: Wrench,
                     active: pathname === "/dashboard/configuration",
                   },
                   {
-                    title: "Settings",
+                    title: t("nav.settings"),
                     url: "/dashboard/settings",
                     icon: Settings,
                     active: pathname === "/dashboard/settings",

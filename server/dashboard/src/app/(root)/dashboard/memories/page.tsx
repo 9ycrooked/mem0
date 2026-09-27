@@ -25,12 +25,16 @@ import { api } from "@/utils/api";
 import { MEMORY_ENDPOINTS } from "@/utils/api-endpoints";
 import { useApiQuery } from "@/hooks/use-api-query";
 import { Memory } from "@/types/api";
+import { useTranslation } from "react-i18next";
+import { SHOW_UPGRADE_BANNERS } from "@/lib/fork-flags";
 
 const PAGE_SIZE = 20;
 // Keep in sync with ALL_MEMORIES_LIMIT in server/main.py.
 const MEMORY_FETCH_LIMIT = 1000;
 
 export default function MemoriesPage() {
+  // 自维护 fork：页面文案接 i18n
+  const { t } = useTranslation("pages");
   const [userId, setUserId] = useState("");
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
   const [memoryToDelete, setMemoryToDelete] = useState<Memory | null>(null);
@@ -79,17 +83,17 @@ export default function MemoriesPage() {
   const columns = [
     {
       key: "memory" as keyof Memory,
-      label: "Content",
+      label: t("memories.columns.memory"),
       width: 400,
       render: (value: string) => (
         <span className="line-clamp-2 text-sm">{value}</span>
       ),
     },
-    { key: "user_id" as keyof Memory, label: "User", width: 100 },
-    { key: "agent_id" as keyof Memory, label: "Agent", width: 100 },
+    { key: "user_id" as keyof Memory, label: t("memories.columns.user"), width: 100 },
+    { key: "agent_id" as keyof Memory, label: t("memories.columns.agent"), width: 100 },
     {
       key: "created_at" as keyof Memory,
-      label: "Created",
+      label: t("memories.columns.created"),
       width: 120,
       render: (value: string) =>
         value ? format(new Date(value), "MMM d, yyyy") : "--",
@@ -98,13 +102,14 @@ export default function MemoriesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold font-fustat">Memories</h1>
+      <h1 className="text-xl font-semibold font-fustat">{t("memories.title")}</h1>
 
-      {memories.length >= MEMORY_FETCH_LIMIT && (
+      {/* 自维护 fork：引流横幅由 SHOW_UPGRADE_BANNERS 控制 */}
+      {SHOW_UPGRADE_BANNERS && memories.length >= MEMORY_FETCH_LIMIT && (
         <UpgradeBanner
           id="memories-1k"
-          message="1,000+ memories stored. Categories can help organize them."
-          ctaLabel="Explore Cloud"
+          message={t("memories.upgrade.message")}
+          ctaLabel={t("memories.upgrade.cta")}
           ctaUrl="https://app.mem0.ai?utm_source=oss&utm_medium=dashboard-memories"
           variant="cloud"
         />
@@ -112,7 +117,7 @@ export default function MemoriesPage() {
 
       <div className="flex gap-3">
         <Input
-          placeholder="Filter by User ID (optional)"
+          placeholder={t("memories.filterPlaceholder")}
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
           onKeyDown={(e) => {
@@ -129,8 +134,8 @@ export default function MemoriesPage() {
         <TableSkeleton rows={5} columns={4} />
       ) : memories.length === 0 ? (
         <EmptyState
-          title="No memories yet"
-          description="Create your first memory by sending a POST /memories request."
+          title={t("memories.empty.title")}
+          description={t("memories.empty.description")}
         >
           <pre className="text-xs text-left bg-surface-default-secondary p-3 rounded font-mono overflow-x-auto mt-3 max-w-lg">
             {`curl -X POST ${apiUrl}/memories \\
@@ -200,7 +205,7 @@ export default function MemoriesPage() {
       >
         <SheetContent className="sm:max-w-md">
           <SheetHeader>
-            <SheetTitle>Memory Detail</SheetTitle>
+            <SheetTitle>{t("memories.detail.title")}</SheetTitle>
             <SheetDescription className="sr-only">
               View memory content and metadata
             </SheetDescription>
@@ -267,7 +272,7 @@ export default function MemoriesPage() {
         isOpen={!!memoryToDelete}
         onClose={() => setMemoryToDelete(null)}
         onConfirm={handleDelete}
-        title="Delete memory"
+        title={t("memories.delete.title")}
         description="This memory will be permanently removed. This cannot be undone."
         itemName={memoryToDelete?.id ?? ""}
         confirmButtonText="Delete"

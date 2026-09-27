@@ -20,13 +20,18 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { getErrorMessage } from "@/lib/error-message";
 import { isValidEmail } from "@/lib/validators";
+import { useTranslation } from "react-i18next";
 
 const RESET_COMMAND =
   "make reset-admin-password EMAIL=<your-email> PASSWORD=<new-password>";
 
+/** 登录后的落地页。自维护 fork：与 middleware 的 DASHBOARD_HOME 保持一致。 */
+const DASHBOARD_HOME = "/dashboard/overview";
+
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation("auth");
   const { user, isLoading, login } = useAuth();
   const { resolvedTheme } = useTheme();
   const [email, setEmail] = useState("");
@@ -42,7 +47,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.push(searchParams.get("next") || "/dashboard/requests");
+      router.push(searchParams.get("next") || DASHBOARD_HOME);
     }
   }, [user, isLoading, router, searchParams]);
 
@@ -52,7 +57,7 @@ export default function LoginForm() {
     e.preventDefault();
     setError("");
     if (!emailValid) {
-      setError("Enter a valid email address.");
+      setError(t("login.invalidEmail"));
       return;
     }
     setSubmitting(true);
@@ -85,7 +90,7 @@ export default function LoginForm() {
             )}
           </div>
           <h1 className="text-2xl font-semibold text-onSurface-default-primary text-center mb-6 font-fustat">
-            Sign in to Mem0
+            {t("login.title")}
           </h1>
           <div className="flex flex-col gap-4 border p-8 border-memBorder-primary rounded-xl">
             {error && (
@@ -95,19 +100,19 @@ export default function LoginForm() {
             )}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="login-email">Email</Label>
+                <Label htmlFor="login-email">{t("login.email")}</Label>
                 <Input
                   id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@company.com"
+                  placeholder={t("login.emailPlaceholder")}
                   required
                   autoFocus
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="login-password">Password</Label>
+                <Label htmlFor="login-password">{t("login.password")}</Label>
                 <Input
                   id="login-password"
                   type="password"
@@ -123,7 +128,7 @@ export default function LoginForm() {
                 size="lg"
                 className="w-full"
               >
-                {submitting ? "Signing in..." : "Sign in"}
+                {submitting ? t("login.submitting") : t("login.submit")}
               </Button>
             </form>
             <Dialog>
@@ -132,17 +137,13 @@ export default function LoginForm() {
                   type="button"
                   className="text-xs text-onSurface-default-tertiary hover:text-onSurface-default-primary underline underline-offset-4 self-center"
                 >
-                  Forgot password?
+                  {t("login.forgotPassword")}
                 </button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Reset your admin password</DialogTitle>
-                  <DialogDescription>
-                    Run this command on the server host. It overwrites the
-                    existing password; anyone already signed in stays signed in
-                    until their session expires.
-                  </DialogDescription>
+                  <DialogTitle>{t("login.resetTitle")}</DialogTitle>
+                  <DialogDescription>{t("login.resetHint")}</DialogDescription>
                 </DialogHeader>
                 <div className="flex gap-2">
                   <Input

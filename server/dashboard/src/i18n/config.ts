@@ -20,13 +20,19 @@ import { initReactI18next } from "react-i18next";
 
 import { DEFAULT_LANGUAGE, type LanguageCode } from "./languages";
 
+import enAuth from "./locales/en/auth.json";
 import enCommon from "./locales/en/common.json";
+import enDashboard from "./locales/en/dashboard.json";
+import enPages from "./locales/en/pages.json";
+import zhAuth from "./locales/zh/auth.json";
 import zhCommon from "./locales/zh/common.json";
+import zhDashboard from "./locales/zh/dashboard.json";
+import zhPages from "./locales/zh/pages.json";
 
 /** 资源表。新增语言时在此登记，保持 en 为回退。 */
 export const resources = {
-  en: { common: enCommon },
-  zh: { common: zhCommon },
+  en: { common: enCommon, dashboard: enDashboard, auth: enAuth, pages: enPages },
+  zh: { common: zhCommon, dashboard: zhDashboard, auth: zhAuth, pages: zhPages },
 } as const;
 
 /** 默认命名空间。 */

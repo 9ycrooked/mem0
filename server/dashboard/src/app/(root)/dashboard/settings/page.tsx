@@ -12,10 +12,17 @@ import { useAuth } from "@/hooks/use-auth";
 import { getErrorMessage } from "@/lib/error-message";
 import { api } from "@/utils/api";
 import { AUTH_ENDPOINTS } from "@/utils/api-endpoints";
+import { useTranslation } from "react-i18next";
+import { LANGUAGE_OPTIONS } from "@/i18n/languages";
+import { useLanguage } from "@/i18n/provider";
+import { cn } from "@/lib/utils";
 
 export default function SettingsPage() {
   const { user, refreshUser } = useAuth();
   const { setTheme } = useTheme();
+  // 自维护 fork：界面语言切换
+  const { t } = useTranslation("common");
+  const { language, setLanguage } = useLanguage();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -93,7 +100,7 @@ export default function SettingsPage() {
 
       <Card className="border-memBorder-primary">
         <CardHeader>
-          <CardTitle className="text-sm">Profile</CardTitle>
+          <CardTitle className="text-sm">{t("settings.profile")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
@@ -130,7 +137,7 @@ export default function SettingsPage() {
 
       <Card className="border-memBorder-primary">
         <CardHeader>
-          <CardTitle className="text-sm">Password</CardTitle>
+          <CardTitle className="text-sm">{t("settings.password")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1">
@@ -185,12 +192,12 @@ export default function SettingsPage() {
 
       <Card className="border-memBorder-primary">
         <CardHeader>
-          <CardTitle className="text-sm">Appearance</CardTitle>
+          <CardTitle className="text-sm">{t("settings.appearance")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4">
             <span className="text-sm text-onSurface-default-secondary">
-              Theme
+              {t("settings.theme")}
             </span>
             <button
               onClick={() => setTheme("light")}
@@ -210,6 +217,30 @@ export default function SettingsPage() {
             >
               <Monitor className="size-4" />
             </button>
+          </div>
+
+          {/* 自维护 fork：界面语言切换。写 cookie，服务端下次渲染即可读到。 */}
+          <div className="mt-4 flex items-center gap-3 border-t border-memBorder-primary pt-4">
+            <span className="text-sm text-onSurface-default-secondary">
+              {t("language.label")}
+            </span>
+            <div className="flex items-center rounded-lg border border-memBorder-primary p-0.5">
+              {LANGUAGE_OPTIONS.map((option) => (
+                <button
+                  key={option.code}
+                  type="button"
+                  onClick={() => setLanguage(option.code)}
+                  className={cn(
+                    "rounded-md px-3 py-1 text-xs transition-colors",
+                    language === option.code
+                      ? "bg-surface-default-secondary font-medium text-onSurface-default-primary"
+                      : "text-onSurface-default-secondary hover:text-onSurface-default-primary",
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>

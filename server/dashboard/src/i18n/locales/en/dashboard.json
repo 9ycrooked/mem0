@@ -1,0 +1,60 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overall state of your memory system",
+  "range": {
+    "label": "Time range",
+    "today": "Today",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "all": "All"
+  },
+  "refresh": "Refresh",
+  "refreshing": "Refreshing…",
+  "metrics": {
+    "memories": "Memories",
+    "memoriesDesc": "Long-term memories currently stored",
+    "entities": "Entities",
+    "entitiesDesc": "Number of user / agent / run records",
+    "requests": "API calls",
+    "requestsDesc": "Requests within the range",
+    "errorRate": "Error rate",
+    "errorRateDesc": "Share of non-2xx responses",
+    "avgLatency": "Avg latency",
+    "avgLatencyDesc": "Mean response time in the range"
+  },
+  "panels": {
+    "category": {
+      "title": "Category breakdown",
+      "description": "Grouped by category"
+    },
+    "writeTrend": {
+      "title": "Write trend",
+      "description": "New memories per day"
+    },
+    "requestRank": {
+      "title": "Top endpoints",
+      "description": "Calls grouped by path"
+    },
+    "entities": {
+      "title": "Entities",
+      "description": "Memory count per owner"
+    },
+    "recent": {
+      "title": "Recent activity",
+      "description": "Newest memories"
+    },
+    "requestStatus": {
+      "title": "Response status",
+      "description": "HTTP status code distribution"
+    }
+  },
+  "empty": {
+    "noMemories": "No memories yet",
+    "noMemoriesHint": "Anything written through the DSH memory tools shows up here",
+    "noRequests": "No calls in this range",
+    "noTrend": "No writes in this range"
+  },
+  "unit": {
+    "ms": "ms"
+  }
+}

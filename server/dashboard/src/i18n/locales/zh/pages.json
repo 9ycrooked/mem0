@@ -1,0 +1,81 @@
+{
+  "memories": {
+    "title": "记忆",
+    "filterPlaceholder": "按 User ID 筛选（可选）",
+    "empty": {
+      "title": "还没有任何记忆",
+      "description": "通过 POST /memories 请求创建第一条记忆。"
+    },
+    "columns": {
+      "memory": "内容",
+      "user": "用户",
+      "created": "创建时间",
+      "agent": "代理"
+    },
+    "detail": {
+      "title": "记忆详情"
+    },
+    "delete": {
+      "title": "删除记忆",
+      "confirm": "确定要删除这条记忆吗？此操作不可撤销。"
+    },
+    "upgrade": {
+      "message": "已存储 1,000 条以上记忆。可以用分类来整理它们。",
+      "cta": "了解云端版"
+    }
+  },
+  "entities": {
+    "title": "实体",
+    "empty": {
+      "title": "还没有实体",
+      "description": "写入记忆后会自动创建对应的实体。"
+    },
+    "columns": {
+      "id": "标识",
+      "type": "类型",
+      "total": "记忆数",
+      "created": "创建时间",
+      "updated": "更新时间",
+      "lastActive": "最近活跃"
+    },
+    "delete": {
+      "title": "删除实体",
+      "confirm": "确定要删除这个实体吗？它的记忆也会一并删除。"
+    }
+  },
+  "apiKeys": {
+    "title": "API 密钥",
+    "empty": {
+      "title": "还没有密钥",
+      "description": "创建一个密钥来调用 Mem0 API。"
+    },
+    "columns": {
+      "label": "名称",
+      "key": "密钥",
+      "created": "创建时间",
+      "lastUsed": "最近使用"
+    },
+    "create": "新建 API 密钥",
+    "createHint": "给这个密钥起个好认的名字",
+    "labelPlaceholder": "例如：生产环境",
+    "yourKey": "你的 API 密钥",
+    "delete": "删除"
+  },
+  "configuration": {
+    "title": "配置",
+    "llmProvider": "大模型服务商",
+    "embeddingModel": "向量模型",
+    "provider": "服务商",
+    "model": "模型",
+    "apiKey": "API 密钥",
+    "selectProvider": "选择服务商",
+    "baseUrl": "接口地址",
+    "save": "保存配置",
+    "reset": "恢复默认",
+    "saved": "配置已保存",
+    "saveFailed": "保存配置失败",
+    "loadingEffective": "正在加载服务器当前配置…",
+    "providersFailed": "加载内置服务商列表失败",
+    "loadFailed": "加载服务器配置失败"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "title": "仪表盘",
+  "subtitle": "记忆系统的整体状态",
+  "range": {
+    "label": "时间范围",
+    "today": "今日",
+    "last7Days": "近 7 天",
+    "last30Days": "近 30 天",
+    "all": "全部"
+  },
+  "refresh": "刷新",
+  "refreshing": "刷新中…",
+  "metrics": {
+    "memories": "记忆总数",
+    "memoriesDesc": "当前保存的长期记忆条数",
+    "entities": "实体数",
+    "entitiesDesc": "user / agent / run 的数量",
+    "requests": "API 调用",
+    "requestsDesc": "区间内的接口调用次数",
+    "errorRate": "错误率",
+    "errorRateDesc": "非 2xx 响应占比",
+    "avgLatency": "平均延迟",
+    "avgLatencyDesc": "区间内接口平均响应时间"
+  },
+  "panels": {
+    "category": {
+      "title": "分类分布",
+      "description": "按 category 统计"
+    },
+    "writeTrend": {
+      "title": "写入趋势",
+      "description": "按天统计新增记忆"
+    },
+    "requestRank": {
+      "title": "接口调用排行",
+      "description": "按路径统计调用次数"
+    },
+    "entities": {
+      "title": "实体概览",
+      "description": "各归属下的记忆数量"
+    },
+    "recent": {
+      "title": "最近活动",
+      "description": "最新写入的记忆"
+    },
+    "requestStatus": {
+      "title": "响应状态",
+      "description": "HTTP 状态码分布"
+    }
+  },
+  "empty": {
+    "noMemories": "还没有任何记忆",
+    "noMemoriesHint": "通过 DSH 的 memory 工具写入后会显示在这里",
+    "noRequests": "区间内没有调用记录",
+    "noTrend": "区间内没有写入"
+  },
+  "unit": {
+    "ms": "毫秒"
+  }
+}

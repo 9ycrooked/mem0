@@ -11,7 +11,13 @@
     "apiKeys": "API 密钥",
     "configuration": "配置",
     "settings": "设置",
-    "account": "账户"
+    "categories": "分类",
+    "webhooks": "Webhook",
+    "analytics": "分析",
+    "export": "导出",
+    "groupActivity": "活动",
+    "groupAccount": "账户",
+    "groupCloudFeatures": "云端功能"
   },
   "action": {
     "save": "保存",
@@ -53,5 +59,11 @@
     "all": "全部",
     "updatedAt": "更新于 {{time}}",
     "createdAt": "创建于 {{time}}"
+  },
+  "settings": {
+    "theme": "主题",
+    "appearance": "外观",
+    "profile": "个人信息",
+    "password": "密码"
   }
 }

@@ -11,6 +11,7 @@ import { TableSkeleton } from "@/components/shared/table-skeleton";
 import { EmptyState } from "@/components/self-hosted/empty-state";
 import DeleteConfirmationModal from "@/components/ui/delete-confirmation-modal";
 import { toast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
 import { api } from "@/utils/api";
 import { ENTITY_ENDPOINTS } from "@/utils/api-endpoints";
 import { getErrorMessage } from "@/lib/error-message";
@@ -18,6 +19,8 @@ import { useApiQuery } from "@/hooks/use-api-query";
 import { Entity } from "@/types/api";
 
 export default function EntitiesPage() {
+  // 自维护 fork：页面文案接 i18n
+  const { t } = useTranslation("pages");
   const [entityToDelete, setEntityToDelete] = useState<Entity | null>(null);
 
   const {
@@ -53,7 +56,7 @@ export default function EntitiesPage() {
   const columns = [
     {
       key: "type" as keyof Entity,
-      label: "Type",
+      label: t("entities.columns.type"),
       width: 100,
       render: (value: Entity["type"]) => (
         <Badge variant="outline" className="capitalize">
@@ -63,7 +66,7 @@ export default function EntitiesPage() {
     },
     {
       key: "id" as keyof Entity,
-      label: "ID",
+      label: t("entities.columns.id"),
       width: 280,
       render: (value: string) => (
         <span className="font-mono text-sm truncate">{value}</span>
@@ -71,13 +74,13 @@ export default function EntitiesPage() {
     },
     {
       key: "total_memories" as keyof Entity,
-      label: "Memories",
+      label: t("entities.columns.total"),
       width: 100,
       align: "right" as const,
     },
     {
       key: "updated_at" as keyof Entity,
-      label: "Last Active",
+      label: t("entities.columns.lastActive"),
       width: 140,
       render: (value: string | null) =>
         value ? format(new Date(value), "MMM d, yyyy") : "--",
@@ -101,13 +104,13 @@ export default function EntitiesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold font-fustat">Entities</h1>
+      <h1 className="text-xl font-semibold font-fustat">{t("entities.title")}</h1>
 
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : entities.length === 0 ? (
         <EmptyState
-          title="No entities yet"
+          title={t("entities.empty.title")}
           description="Entities appear once memories are stored with a user_id, agent_id, or run_id."
         />
       ) : (
@@ -124,7 +127,7 @@ export default function EntitiesPage() {
         isOpen={!!entityToDelete}
         onClose={() => setEntityToDelete(null)}
         onConfirm={handleDelete}
-        title="Delete entity"
+        title={t("entities.delete.title")}
         description="All memories associated with this entity will be permanently removed. This cannot be undone."
         itemName={entityToDelete?.id ?? ""}
         confirmButtonText="Delete"

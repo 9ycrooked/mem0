@@ -10,6 +10,9 @@ const PUBLIC_PATHS = [
   "/favicon",
 ];
 
+/** 登录后的落地页。自维护 fork：原为 /dashboard/requests，现指向新仪表盘。 */
+const DASHBOARD_HOME = "/dashboard/overview";
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -43,14 +46,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 自维护 fork：登录后的落地页由 /dashboard/requests 改为 /dashboard/overview
+  // （新仪表盘）。requests 页面本身保留，可从侧边栏进入。
   if (pathname === "/") {
     return NextResponse.redirect(
-      new URL(hasRefreshToken ? "/dashboard/requests" : "/login", request.url),
+      new URL(hasRefreshToken ? DASHBOARD_HOME : "/login", request.url),
     );
   }
 
   if (pathname === "/dashboard" || pathname === "/dashboard/") {
-    return NextResponse.redirect(new URL("/dashboard/requests", request.url));
+    return NextResponse.redirect(new URL(DASHBOARD_HOME, request.url));
   }
 
   if (!hasRefreshToken) {

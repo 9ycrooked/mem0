@@ -16,6 +16,8 @@ import { DataTable } from "@/components/shared/data-table";
 import { TableSkeleton } from "@/components/shared/table-skeleton";
 import { EmptyState } from "@/components/self-hosted/empty-state";
 import DeleteConfirmationModal from "@/components/ui/delete-confirmation-modal";
+import { useTranslation } from "react-i18next";
+import { SHOW_UPGRADE_BANNERS } from "@/lib/fork-flags";
 import { api } from "@/utils/api";
 import { API_KEY_ENDPOINTS } from "@/utils/api-endpoints";
 import { toast } from "@/components/ui/use-toast";
@@ -28,6 +30,8 @@ import { useApiQuery } from "@/hooks/use-api-query";
 import { ApiKey, ApiKeyCreateResponse } from "@/types/api";
 
 export default function ApiKeysPage() {
+  // 自维护 fork：页面文案接 i18n
+  const { t } = useTranslation("pages");
   const [createOpen, setCreateOpen] = useState(false);
   const [newLabel, setNewLabel] = useState("");
   const [newKey, setNewKey] = useState("");
@@ -88,10 +92,10 @@ export default function ApiKeysPage() {
   };
 
   const columns = [
-    { key: "label" as keyof ApiKey, label: "Label", width: 150 },
+    { key: "label" as keyof ApiKey, label: t("apiKeys.columns.label"), width: 150 },
     {
       key: "key_prefix" as keyof ApiKey,
-      label: "Key",
+      label: t("apiKeys.columns.key"),
       width: 120,
       render: (value: string) => (
         <code className="text-xs font-mono">{value}...</code>
@@ -99,13 +103,13 @@ export default function ApiKeysPage() {
     },
     {
       key: "created_at" as keyof ApiKey,
-      label: "Created",
+      label: t("apiKeys.columns.created"),
       width: 120,
       render: (value: string) => format(new Date(value), "MMM d, yyyy"),
     },
     {
       key: "last_used_at" as keyof ApiKey,
-      label: "Last Used",
+      label: t("apiKeys.columns.lastUsed"),
       width: 120,
       render: (value: string | null) =>
         value ? format(new Date(value), "MMM d, yyyy") : "Never",
@@ -130,7 +134,7 @@ export default function ApiKeysPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold font-fustat">API Keys</h1>
+        <h1 className="text-xl font-semibold font-fustat">{t("apiKeys.title")}</h1>
         <Dialog open={createOpen} onOpenChange={handleDialogClose}>
           <DialogTrigger asChild>
             <Button size="sm">
@@ -139,17 +143,17 @@ export default function ApiKeysPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create API Key</DialogTitle>
+              <DialogTitle>{t("apiKeys.create")}</DialogTitle>
             </DialogHeader>
             {!newKey ? (
               <div className="space-y-4 mt-2">
                 <div className="space-y-2">
-                  <Label htmlFor="api-key-label">Label</Label>
+                  <Label htmlFor="api-key-label">{t("apiKeys.columns.label")}</Label>
                   <Input
                     id="api-key-label"
                     value={newLabel}
                     onChange={(e) => setNewLabel(e.target.value)}
-                    placeholder="e.g. Production"
+                    placeholder={t("apiKeys.labelPlaceholder")}
                   />
                 </div>
                 <Button
@@ -163,7 +167,7 @@ export default function ApiKeysPage() {
             ) : (
               <div className="space-y-4 mt-2">
                 <div className="space-y-2">
-                  <Label htmlFor="api-key-new">Your API Key</Label>
+                  <Label htmlFor="api-key-new">{t("apiKeys.yourKey")}</Label>
                   <div className="flex gap-2">
                     <Input
                       id="api-key-new"
@@ -203,11 +207,12 @@ export default function ApiKeysPage() {
         </Dialog>
       </div>
 
-      {keys.length >= 3 && (
+      {/* 自维护 fork：引流横幅由 SHOW_UPGRADE_BANNERS 控制 */}
+      {SHOW_UPGRADE_BANNERS && keys.length >= 3 && (
         <UpgradeBanner
           id="api-keys-3"
           message="Managing multiple apps? Cloud offers project-based isolation."
-          ctaLabel="Explore Cloud"
+          ctaLabel={t("memories.upgrade.cta")}
           ctaUrl="https://app.mem0.ai?utm_source=oss&utm_medium=dashboard-api-keys"
           variant="cloud"
         />
@@ -217,7 +222,7 @@ export default function ApiKeysPage() {
         <TableSkeleton rows={3} columns={4} />
       ) : keys.length === 0 ? (
         <EmptyState
-          title="No API keys yet"
+          title={t("apiKeys.empty.title")}
           description="Create your first API key to start using the Mem0 API."
         />
       ) : (
@@ -234,7 +239,7 @@ export default function ApiKeysPage() {
         isOpen={!!keyToRevoke}
         onClose={() => setKeyToRevoke(null)}
         onConfirm={handleRevoke}
-        title="Revoke API key"
+        title={t("apiKeys.delete")}
         description="Applications using this key will immediately stop working. This cannot be undone."
         itemName={keyToRevoke?.label ?? ""}
         confirmButtonText="Revoke"

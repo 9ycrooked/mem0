@@ -15,6 +15,8 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { UpgradeBanner } from "@/components/self-hosted/upgrade-banner";
 import { getErrorMessage } from "@/lib/error-message";
+import { useTranslation } from "react-i18next";
+import { SHOW_UPGRADE_BANNERS } from "@/lib/fork-flags";
 import { api } from "@/utils/api";
 import { MEMORY_ENDPOINTS } from "@/utils/api-endpoints";
 import {
@@ -31,6 +33,8 @@ type BundledProviders = {
 
 export default function ConfigurationPage() {
   const { isAdmin } = useAuth();
+  // 自维护 fork：页面文案接 i18n
+  const { t } = useTranslation("pages");
   const [isSaving, setIsSaving] = useState(false);
   const [llmProvider, setLlmProvider] = useState("");
   const [llmModel, setLlmModel] = useState("");
@@ -43,7 +47,7 @@ export default function ConfigurationPage() {
       const res = await api.get(MEMORY_ENDPOINTS.CONFIGURE);
       return getEffectiveConfig(res.data);
     },
-    { errorToast: "Failed to load server configuration" },
+    { errorToast: t("configuration.loadFailed") },
   );
 
   const { data: providers } = useApiQuery<BundledProviders>(
@@ -53,7 +57,7 @@ export default function ConfigurationPage() {
       );
       return res.data;
     },
-    { errorToast: "Failed to load bundled providers" },
+    { errorToast: t("configuration.providersFailed") },
   );
 
   useEffect(() => {
@@ -95,10 +99,10 @@ export default function ConfigurationPage() {
       }
 
       await api.post(MEMORY_ENDPOINTS.CONFIGURE, newConfig);
-      toast({ title: "Configuration saved", variant: "success" });
+      toast({ title: t("configuration.saved"), variant: "success" });
     } catch (error) {
       toast({
-        title: "Failed to save configuration",
+        title: t("configuration.saveFailed"),
         description: getErrorMessage(error),
         variant: "destructive",
       });
@@ -110,7 +114,7 @@ export default function ConfigurationPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="text-xl font-semibold font-fustat">Configuration</h1>
+        <h1 className="text-xl font-semibold font-fustat">{t("configuration.title")}</h1>
         {isPrefilling && (
           <p className="text-sm text-onSurface-default-tertiary">
             Loading effective server configuration...
@@ -120,12 +124,12 @@ export default function ConfigurationPage() {
 
       <Card className="border-memBorder-primary">
         <CardHeader>
-          <CardTitle className="text-sm">LLM Provider</CardTitle>
+          <CardTitle className="text-sm">{t("configuration.llmProvider")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label className="text-xs">Provider</Label>
+              <Label className="text-xs">{t("configuration.provider")}</Label>
               <Select
                 value={llmProvider}
                 onValueChange={(value) => {
@@ -135,7 +139,7 @@ export default function ConfigurationPage() {
                 disabled={!isAdmin || !providers}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={t("configuration.selectProvider")} />
                 </SelectTrigger>
                 <SelectContent>
                   {providers?.llm.map((name) => (
@@ -147,7 +151,7 @@ export default function ConfigurationPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">Model</Label>
+              <Label className="text-xs">{t("configuration.model")}</Label>
               <Input
                 placeholder="gpt-4.1-nano-2025-04-14"
                 value={llmModel}
@@ -157,7 +161,7 @@ export default function ConfigurationPage() {
             </div>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">API Key</Label>
+            <Label className="text-xs">{t("configuration.apiKey")}</Label>
             <Input
               type="password"
               placeholder="sk-..."
@@ -171,19 +175,19 @@ export default function ConfigurationPage() {
 
       <Card className="border-memBorder-primary">
         <CardHeader>
-          <CardTitle className="text-sm">Embedding Model</CardTitle>
+          <CardTitle className="text-sm">{t("configuration.embeddingModel")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label className="text-xs">Provider</Label>
+              <Label className="text-xs">{t("configuration.provider")}</Label>
               <Select
                 value={embedderProvider}
                 onValueChange={setEmbedderProvider}
                 disabled={!isAdmin || !providers}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={t("configuration.selectProvider")} />
                 </SelectTrigger>
                 <SelectContent>
                   {providers?.embedder.map((name) => (
@@ -195,7 +199,7 @@ export default function ConfigurationPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">Model</Label>
+              <Label className="text-xs">{t("configuration.model")}</Label>
               <Input
                 placeholder="text-embedding-3-small"
                 value={embedderModel}
@@ -223,7 +227,7 @@ export default function ConfigurationPage() {
 
       {isAdmin && (
         <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving ? "Saving..." : "Save Configuration"}
+          {isSaving ? t("action.loading") : t("configuration.save")}
         </Button>
       )}
 

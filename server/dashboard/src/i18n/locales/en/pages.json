@@ -1,0 +1,81 @@
+{
+  "memories": {
+    "title": "Memories",
+    "filterPlaceholder": "Filter by User ID (optional)",
+    "empty": {
+      "title": "No memories yet",
+      "description": "Create your first memory by sending a POST /memories request."
+    },
+    "columns": {
+      "memory": "Memory",
+      "user": "User",
+      "created": "Created",
+      "agent": "Agent"
+    },
+    "detail": {
+      "title": "Memory Detail"
+    },
+    "delete": {
+      "title": "Delete memory",
+      "confirm": "Delete this memory? This cannot be undone."
+    },
+    "upgrade": {
+      "message": "1,000+ memories stored. Categories can help organize them.",
+      "cta": "Explore Cloud"
+    }
+  },
+  "entities": {
+    "title": "Entities",
+    "empty": {
+      "title": "No entities yet",
+      "description": "Entities are created automatically when memories are written."
+    },
+    "columns": {
+      "id": "ID",
+      "type": "Type",
+      "total": "Memories",
+      "created": "Created",
+      "updated": "Updated",
+      "lastActive": "Last Active"
+    },
+    "delete": {
+      "title": "Delete entity",
+      "confirm": "Delete this entity? Its memories will be removed too."
+    }
+  },
+  "apiKeys": {
+    "title": "API Keys",
+    "empty": {
+      "title": "No API keys yet",
+      "description": "Create a key to call the Mem0 API."
+    },
+    "columns": {
+      "label": "Label",
+      "key": "Key",
+      "created": "Created",
+      "lastUsed": "Last Used"
+    },
+    "create": "Create API Key",
+    "createHint": "Give this key a recognizable name",
+    "labelPlaceholder": "e.g. Production",
+    "yourKey": "Your API Key",
+    "delete": "Delete"
+  },
+  "configuration": {
+    "title": "Configuration",
+    "llmProvider": "LLM Provider",
+    "embeddingModel": "Embedding Model",
+    "provider": "Provider",
+    "model": "Model",
+    "apiKey": "API Key",
+    "selectProvider": "Select provider",
+    "baseUrl": "Base URL",
+    "save": "Save configuration",
+    "reset": "Reset to defaults",
+    "saved": "Configuration saved",
+    "saveFailed": "Failed to save configuration",
+    "loadingEffective": "Loading effective server configuration...",
+    "providersFailed": "Failed to load bundled providers",
+    "loadFailed": "Failed to load server configuration"
+  }
+}
