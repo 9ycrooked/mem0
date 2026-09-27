@@ -36,6 +36,13 @@ import {
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+/**
+ * 自维护 fork 开关：是否在侧边栏显示官方的 CLOUD FEATURES 分组。
+ * 该分组四项均为 LockedPage 占位页（假数据预览 + 跳转 Mem0 Cloud 的推广按钮），
+ * 自托管用户用不到。改为 true 即恢复官方行为。
+ */
+const SHOW_CLOUD_FEATURES = false;
+
 export function MainNav({
   className,
   ...props
@@ -110,6 +117,11 @@ export function MainNav({
                 <div className="h-[1px] w-full bg-memBorder-primary my-2" />
               )}
 
+              {/* 自维护改动：官方在此展示 CLOUD FEATURES（Categories / Webhooks /
+                  Analytics / Export 四项），均为 LockedPage 占位页 —— 内容是手绘假数据，
+                  唯一可点按钮指向 Mem0 Cloud 注册（带 UTM 埋点）。自托管场景下无用，
+                  故以开关隐藏。置 true 可恢复官方行为。 */}
+              {SHOW_CLOUD_FEATURES && (
               <Collapsible
                 open={isCloudOpen}
                 onOpenChange={setIsCloudOpen}
@@ -185,6 +197,7 @@ export function MainNav({
                   ))}
                 </CollapsibleContent>
               </Collapsible>
+              )}
 
               {isSidebarCollapsed && (
                 <div className="h-[1px] w-full bg-memBorder-primary my-2" />
