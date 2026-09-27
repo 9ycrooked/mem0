@@ -1,0 +1,57 @@
+{
+  "app": {
+    "name": "Mem0",
+    "dashboard": "Dashboard"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "memories": "Memories",
+    "entities": "Entities",
+    "requests": "Requests",
+    "apiKeys": "API Keys",
+    "configuration": "Configuration",
+    "settings": "Settings",
+    "account": "Account"
+  },
+  "action": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "reset": "Reset",
+    "apply": "Apply",
+    "close": "Close",
+    "retry": "Retry",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "copy": "Copy",
+    "copied": "Copied",
+    "refresh": "Refresh",
+    "loading": "Loading…"
+  },
+  "state": {
+    "empty": "No data",
+    "emptyDescription": "Nothing here yet",
+    "error": "Something went wrong",
+    "errorDescription": "Failed to load, please try again",
+    "noResults": "No matching results"
+  },
+  "language": {
+    "label": "Interface language",
+    "description": "Choose the language used across the interface",
+    "zh": "简体中文",
+    "en": "English"
+  },
+  "time": {
+    "today": "Today",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "all": "All",
+    "updatedAt": "Updated {{time}}",
+    "createdAt": "Created {{time}}"
+  }
+}
