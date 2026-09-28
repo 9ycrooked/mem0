@@ -63,6 +63,11 @@ jobs:
           context: server/dashboard
           file: server/dashboard/Dockerfile
           push: true
+          # ACR 个人版的 registry 实现不认识 provenance / sbom 生成的
+          # application/vnd.oci.empty.v1+json，会报
+          # "denied: unknown manifest class"。这两个 attestation 对本项目无用，关掉。
+          provenance: false
+          sbom: false
           # latest 供服务器直接拉；同时打上 commit sha 便于回滚
           tags: |
             ${{ env.ACR_IMAGE }}:latest
