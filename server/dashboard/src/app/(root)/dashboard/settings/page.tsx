@@ -20,8 +20,10 @@ import { cn } from "@/lib/utils";
 export default function SettingsPage() {
   const { user, refreshUser } = useAuth();
   const { setTheme } = useTheme();
-  // 自维护 fork：界面语言切换
-  const { t } = useTranslation("common");
+  // 自维护 fork：界面语言切换。
+  // 两个命名空间：settings.* 在 pages 里（与其它页面一致），
+  // language.* 在 common 里（语言切换器的通用文案）。
+  const { t } = useTranslation(["pages", "common"]);
   const { language, setLanguage } = useLanguage();
 
   const [name, setName] = useState("");
@@ -222,7 +224,8 @@ export default function SettingsPage() {
           {/* 自维护 fork：界面语言切换。写 cookie，服务端下次渲染即可读到。 */}
           <div className="mt-4 flex items-center gap-3 border-t border-memBorder-primary pt-4">
             <span className="text-sm text-onSurface-default-secondary">
-              {t("language.label")}
+              {/* language.* 在 common 命名空间，需显式指定 */}
+              {t("language.label", { ns: "common" })}
             </span>
             <div className="flex items-center rounded-lg border border-memBorder-primary p-0.5">
               {LANGUAGE_OPTIONS.map((option) => (

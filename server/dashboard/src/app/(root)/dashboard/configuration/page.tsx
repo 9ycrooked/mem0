@@ -227,7 +227,8 @@ export default function ConfigurationPage() {
 
       {isAdmin && (
         <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving ? t("action.loading") : t("configuration.save")}
+          {/* action.* 在 common 命名空间 */}
+            {isSaving ? t("action.loading", { ns: "common" }) : t("configuration.save")}
         </Button>
       )}
 

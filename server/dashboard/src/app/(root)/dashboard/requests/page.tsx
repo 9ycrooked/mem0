@@ -205,7 +205,8 @@ export default function RequestsPage() {
           disabled={isLoading}
         >
           <RefreshCw className="size-4 mr-2" />
-          {t("action.refresh")}
+          {/* action.* 在 common 命名空间 */}
+          {t("action.refresh", { ns: "common" })}
         </Button>
       </div>
 
