@@ -138,7 +138,7 @@ export default function ApiKeysPage() {
         <Dialog open={createOpen} onOpenChange={handleDialogClose}>
           <DialogTrigger asChild>
             <Button size="sm">
-              <Plus className="size-4 mr-1" /> Create Key
+              <Plus className="size-4 mr-1" /> {t("apiKeys.createButton")}
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -161,7 +161,7 @@ export default function ApiKeysPage() {
                   disabled={!newLabel}
                   className="w-full"
                 >
-                  Create
+                  {t("apiKeys.createConfirm")}
                 </Button>
               </div>
             ) : (
@@ -192,14 +192,14 @@ export default function ApiKeysPage() {
                     </CopyToClipboard>
                   </div>
                   <p className="text-xs text-onSurface-danger-primary">
-                    Save this key -- you won&apos;t see it again.
+                    {t("apiKeys.saveWarning")}
                   </p>
                 </div>
                 <Button
                   onClick={() => handleDialogClose(false)}
                   className="w-full"
                 >
-                  Done
+                  {t("apiKeys.done")}
                 </Button>
               </div>
             )}
@@ -223,7 +223,7 @@ export default function ApiKeysPage() {
       ) : keys.length === 0 ? (
         <EmptyState
           title={t("apiKeys.empty.title")}
-          description="Create your first API key to start using the Mem0 API."
+          description={t("apiKeys.empty.description")}
         />
       ) : (
         <Card className="border-memBorder-primary overflow-hidden">
@@ -240,9 +240,9 @@ export default function ApiKeysPage() {
         onClose={() => setKeyToRevoke(null)}
         onConfirm={handleRevoke}
         title={t("apiKeys.delete")}
-        description="Applications using this key will immediately stop working. This cannot be undone."
+        description={t("apiKeys.revokeConfirm")}
         itemName={keyToRevoke?.label ?? ""}
-        confirmButtonText="Revoke"
+        confirmButtonText={t("apiKeys.revoke")}
       />
     </div>
   );

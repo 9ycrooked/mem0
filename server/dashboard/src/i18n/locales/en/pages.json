@@ -59,7 +59,16 @@
     "createHint": "Give this key a recognizable name",
     "labelPlaceholder": "e.g. Production",
     "yourKey": "Your API Key",
-    "delete": "Delete"
+    "delete": "Delete",
+    "createdTitle": "Your API Key",
+    "deleteConfirm": "Delete this key? Anything using it will lose access immediately.",
+    "deleteTitle": "Delete API key",
+    "done": "Done",
+    "saveWarning": "Save this key -- you won't see it again.",
+    "createButton": "Create Key",
+    "createConfirm": "Create",
+    "revoke": "Revoke",
+    "revokeConfirm": "Applications using this key will immediately stop working. This cannot be undone."
   },
   "configuration": {
     "title": "Configuration",

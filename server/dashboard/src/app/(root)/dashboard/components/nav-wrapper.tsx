@@ -1,6 +1,7 @@
 "use client";
 
 import { MainNav } from "./main-nav";
+import { useTranslation } from "react-i18next";
 import { PanelRight, LogOut, Settings, HelpCircle } from "lucide-react";
 import { useCallback } from "react";
 import {
@@ -29,6 +30,8 @@ import Link from "next/link";
 import { Building2 } from "lucide-react";
 
 export default function NavWrapper() {
+  // 自维护 fork：顶栏提示文案接 i18n（nav.* 在 common 命名空间，与侧边栏一致）
+  const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const isSidebarCollapsed = useSelector(
     (state: RootState) => state.layout.isSidebarCollapsed,
@@ -146,7 +149,9 @@ export default function NavWrapper() {
             onClick={handleToggle}
             className="cursor-pointer text-onSurface-default-tertiary hover:text-onSurface-default-secondary"
             aria-label={
-              isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+              isSidebarCollapsed
+                ? t("nav.expandSidebar", { ns: "common" })
+                : t("nav.collapseSidebar", { ns: "common" })
             }
           >
             <PanelRight className="size-4" />
@@ -165,7 +170,7 @@ export default function NavWrapper() {
                 <HelpCircle className="size-4 shrink-0" />
               </a>
             </TooltipTrigger>
-            <TooltipContent>Documentation</TooltipContent>
+            <TooltipContent>{t("nav.documentation", { ns: "common" })}</TooltipContent>
           </Tooltip>
         </div>
       </div>

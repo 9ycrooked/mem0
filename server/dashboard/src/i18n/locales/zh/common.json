@@ -17,7 +17,10 @@
     "export": "导出",
     "groupActivity": "活动",
     "groupAccount": "账户",
-    "groupCloudFeatures": "云端功能"
+    "groupCloudFeatures": "云端功能",
+    "documentation": "文档",
+    "expandSidebar": "展开侧边栏",
+    "collapseSidebar": "收起侧边栏"
   },
   "action": {
     "save": "保存",
