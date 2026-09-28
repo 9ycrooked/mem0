@@ -2,14 +2,19 @@ name: Build dashboard image
 
 # 自维护 fork 新增。
 #
-# 为什么要在 GitHub 上构建：部署目标 qmm 只有 1613MB 内存，跑
+# 为什么在 GitHub 上构建：部署目标 qmm 只有 1613MB 内存，跑
 # `pnpm install`（含 VChart）+ `next build` 会把系统压到 swap 抖动，
-# 连 SSH 都连不上（2026-09-27 实际发生过一次，只能重启实例）。
+# 连 SSH 都完不成握手（2026-09-27 实际发生过，只能重启实例）。
 # 所以构建放到 GitHub Actions，服务器只做 docker pull + up。
 #
-# 镜像推到 GHCR：ghcr.io/9ycrooked/mem0-dashboard
-# 首次推送后需要在 GitHub 上把该 package 设为 public，
-# 否则服务器拉取时要么登录、要么拉不到。
+# 推两个仓库：
+#   ACR（主用） crpi-algk2aynnlsz08on.cn-hangzhou.personal.cr.aliyuncs.com/dsh_qianmang/mem0
+#               —— 从武汉服务器拉取走公网但回国线路，比 ghcr.io 快得多
+#               （实测 ghcr.io 的 blob 下载 30 分钟无进展）
+#   GHCR（备份）ghcr.io/9ycrooked/mem0-dashboard
+#               —— 公开包，作为备用来源与历史留存
+#
+# 需要的 Secrets：ACR_REGISTRY / ACR_USERNAME / ACR_PASSWORD
 
 on:
   push:
@@ -20,8 +25,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/mem0-dashboard
+  GHCR_IMAGE: ghcr.io/${{ github.repository_owner }}/mem0-dashboard
+  ACR_IMAGE: ${{ secrets.ACR_REGISTRY }}/dsh_qianmang/mem0
 
 jobs:
   build:
@@ -40,9 +45,16 @@ jobs:
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -53,7 +65,9 @@ jobs:
           push: true
           # latest 供服务器直接拉；同时打上 commit sha 便于回滚
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.ACR_IMAGE }}:latest
+            ${{ env.ACR_IMAGE }}:${{ github.sha }}
+            ${{ env.GHCR_IMAGE }}:latest
+            ${{ env.GHCR_IMAGE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
