@@ -52,10 +52,10 @@ export default function SettingsPage() {
         email: email.trim(),
       });
       await refreshUser();
-      toast({ title: "Profile updated", variant: "success" });
+      toast({ title: t("settings.profileSaved"), variant: "success" });
     } catch (error) {
       toast({
-        title: "Failed to update profile",
+        title: t("settings.profileFailed"),
         description: getErrorMessage(error),
         variant: "destructive",
       });
@@ -67,7 +67,7 @@ export default function SettingsPage() {
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       toast({
-        title: "Passwords don't match",
+        title: t("settings.passwordMismatch"),
         variant: "destructive",
       });
       return;
@@ -82,10 +82,10 @@ export default function SettingsPage() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast({ title: "Password updated", variant: "success" });
+      toast({ title: t("settings.passwordSaved"), variant: "success" });
     } catch (error) {
       toast({
-        title: "Failed to update password",
+        title: t("settings.passwordFailed"),
         description: getErrorMessage(error),
         variant: "destructive",
       });
@@ -96,7 +96,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold font-fustat">Settings</h1>
+      <h1 className="text-xl font-semibold font-fustat">{t("settings.title")}</h1>
 
       <Card className="border-memBorder-primary">
         <CardHeader>
@@ -106,7 +106,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="settings-name" className="text-xs">
-                Name
+                {t("settings.name")}
               </Label>
               <Input
                 id="settings-name"
@@ -116,7 +116,7 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="settings-email" className="text-xs">
-                Email
+                {t("settings.email")}
               </Label>
               <Input
                 id="settings-email"
@@ -130,7 +130,7 @@ export default function SettingsPage() {
             onClick={handleSaveProfile}
             disabled={!profileDirty || !profileValid || savingProfile}
           >
-            {savingProfile ? "Saving..." : "Save profile"}
+            {savingProfile ? t("settings.savingProfile") : t("settings.saveProfile")}
           </Button>
         </CardContent>
       </Card>
@@ -154,19 +154,19 @@ export default function SettingsPage() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="settings-new-password" className="text-xs">
-                New password
+                {t("settings.newPassword")}
               </Label>
               <Input
                 id="settings-new-password"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Min 8 characters"
+                placeholder={t("settings.passwordPlaceholder")}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="settings-confirm-password" className="text-xs">
-                Confirm new password
+                {t("settings.confirmPassword")}
               </Label>
               <Input
                 id="settings-confirm-password"
@@ -185,7 +185,7 @@ export default function SettingsPage() {
               savingPassword
             }
           >
-            {savingPassword ? "Saving..." : "Update password"}
+            {savingPassword ? t("settings.updatingPassword") : t("settings.updatePassword")}
           </Button>
         </CardContent>
       </Card>

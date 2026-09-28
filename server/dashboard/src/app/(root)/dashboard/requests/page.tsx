@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/shared/data-table";
 import { TableSkeleton } from "@/components/shared/table-skeleton";
 import { EmptyState } from "@/components/self-hosted/empty-state";
+import { useTranslation } from "react-i18next";
 import { api } from "@/utils/api";
 import { REQUEST_ENDPOINTS } from "@/utils/api-endpoints";
 import { useApiQuery } from "@/hooks/use-api-query";
@@ -53,16 +54,25 @@ const getMethodClassName = (method: string) => {
   }
 };
 
-const getAuthLabel = (authType: string) => {
+/**
+ * 认证方式标签。
+ *
+ * 自维护 fork：改为接收 t 函数以便翻译。
+ * JWT 是技术缩写，两种语言下都保持原样。
+ */
+const getAuthLabel = (
+  authType: string,
+  t: (key: string) => string,
+): string => {
   switch (authType.toLowerCase()) {
     case "bearer":
-      return "JWT";
+      return t("requests.authJwt");
     case "api_key":
-      return "API Key";
+      return t("requests.authApiKey");
     case "admin_api_key":
-      return "Admin Key";
+      return t("requests.authAdminKey");
     case "disabled":
-      return "Disabled";
+      return t("requests.authDisabled");
     default:
       return "--";
   }
@@ -81,6 +91,8 @@ const normalizeLog = (entry: ApiRequestLog): RequestLog => {
 };
 
 export default function RequestsPage() {
+  // 自维护 fork：页面文案接 i18n
+  const { t } = useTranslation("pages");
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
@@ -97,7 +109,7 @@ export default function RequestsPage() {
       setLastUpdated(new Date().toISOString());
       return (res.data ?? []).map(normalizeLog);
     },
-    { errorToast: "Failed to load request logs", initialData: [] },
+    { errorToast: t("requests.loadFailed"), initialData: [] },
   );
 
   const totalRequests = logs.length;
@@ -116,7 +128,7 @@ export default function RequestsPage() {
   const columns = [
     {
       key: "createdAt" as keyof RequestLog,
-      label: "Time",
+      label: t("requests.colTime"),
       width: 140,
       render: (value: string) => (
         <span title={format(new Date(value), "PPpp")}>
@@ -126,7 +138,7 @@ export default function RequestsPage() {
     },
     {
       key: "method" as keyof RequestLog,
-      label: "Method",
+      label: t("requests.colMethod"),
       width: 96,
       render: (value: string) => (
         <Badge variant="outline" className={getMethodClassName(value)}>
@@ -136,7 +148,7 @@ export default function RequestsPage() {
     },
     {
       key: "path" as keyof RequestLog,
-      label: "Path",
+      label: t("requests.colPath"),
       width: 360,
       render: (value: string) => (
         <span className="font-mono text-xs break-all text-onSurface-default-primary">
@@ -146,7 +158,7 @@ export default function RequestsPage() {
     },
     {
       key: "statusCode" as keyof RequestLog,
-      label: "Status",
+      label: t("requests.colStatus"),
       width: 120,
       render: (value: number) => (
         <Badge variant="outline" className={getStatusClassName(value)}>
@@ -156,15 +168,15 @@ export default function RequestsPage() {
     },
     {
       key: "latencyMs" as keyof RequestLog,
-      label: "Latency",
+      label: t("requests.colLatency"),
       width: 100,
       render: (value: number) => <span>{value} ms</span>,
     },
     {
       key: "authType" as keyof RequestLog,
-      label: "Auth",
+      label: t("requests.colAuth"),
       width: 120,
-      render: (value: string) => getAuthLabel(value),
+      render: (value: string) => getAuthLabel(value, t),
     },
   ];
 
@@ -172,14 +184,15 @@ export default function RequestsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-xl font-semibold font-fustat">Requests</h1>
+          <h1 className="text-xl font-semibold font-fustat">{t("requests.title")}</h1>
           <p className="text-sm text-onSurface-default-secondary">
-            Recent request logs from your self-hosted instance.
+            {t("requests.subtitle")}
           </p>
           {lastUpdated && (
             <p className="text-xs text-onSurface-default-tertiary">
-              Last updated{" "}
-              {formatDistanceToNow(new Date(lastUpdated), { addSuffix: true })}
+              {t("requests.lastUpdated", {
+                time: formatDistanceToNow(new Date(lastUpdated), { addSuffix: true }),
+              })}
             </p>
           )}
         </div>
@@ -192,19 +205,19 @@ export default function RequestsPage() {
           disabled={isLoading}
         >
           <RefreshCw className="size-4 mr-2" />
-          Refresh
+          {t("action.refresh")}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
-          { label: "Total Requests", value: totalRequests },
+          { label: t("requests.statsTotal"), value: totalRequests },
           {
-            label: "Success Rate",
+            label: t("requests.statsSuccessRate"),
             value: totalRequests > 0 ? `${successRate}%` : "--",
           },
           {
-            label: "Avg Latency",
+            label: t("requests.statsAvgLatency"),
             value: totalRequests > 0 ? `${averageLatency} ms` : "--",
           },
         ].map((card) => (
@@ -231,8 +244,8 @@ export default function RequestsPage() {
         <TableSkeleton rows={6} columns={6} />
       ) : logs.length === 0 ? (
         <EmptyState
-          title="No request logs yet"
-          description="Requests will appear here once your instance receives traffic."
+          title={t("requests.emptyTitle")}
+          description={t("requests.emptyDescription")}
           image="requests"
         />
       ) : (
