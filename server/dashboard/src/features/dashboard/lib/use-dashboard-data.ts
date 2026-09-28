@@ -46,8 +46,20 @@ import {
 import { presetDays, type TimeRangePresetKey } from "../lib/time-range";
 import { handleServerError } from "../lib/handle-server-error";
 
-/** 请求日志一次最多取多少条（接口只支持 limit）。 */
-const REQUEST_LIMIT = 500;
+/**
+ * 请求日志一次最多取多少条。
+ *
+ * 上限来自服务端校验（已核对 /openapi.json）：
+ *   limit: integer, default 50, min 1, max 200
+ * 传超过 200 会被 FastAPI 以 422 拒绝（"Input should be less than or equal to 200"）。
+ * 该接口不支持时间范围参数，所以「最近 N 天」是在客户端按 created_at 过滤的。
+ *
+ * 导出以便单测钉住这个边界（曾经写成 500 导致整块调用统计 422 失效）。
+ */
+export const REQUEST_LIMIT = 200;
+
+/** 服务端对 /requests 的 limit 上限。改服务端时同步这里。 */
+export const REQUEST_LIMIT_MAX = 200;
 
 export interface DashboardData {
   memories: MemoryRecord[];
