@@ -24,9 +24,7 @@
   },
   "action": {
     "save": "Save",
-    "cancel": "Cancel",
     "confirm": "Confirm",
-    "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
     "search": "Search",
@@ -40,7 +38,12 @@
     "copy": "Copy",
     "copied": "Copied",
     "refresh": "Refresh",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "confirmPlaceholder": "Enter name to confirm",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmTypePrefix": "Please type ",
+    "confirmTypeSuffix": " to confirm."
   },
   "state": {
     "empty": "No data",

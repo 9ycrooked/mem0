@@ -24,9 +24,7 @@
   },
   "action": {
     "save": "保存",
-    "cancel": "取消",
     "confirm": "确认",
-    "delete": "删除",
     "edit": "编辑",
     "create": "新建",
     "search": "搜索",
@@ -40,7 +38,12 @@
     "copy": "复制",
     "copied": "已复制",
     "refresh": "刷新",
-    "loading": "加载中…"
+    "loading": "加载中…",
+    "confirmPlaceholder": "输入名称以确认",
+    "cancel": "取消",
+    "delete": "删除",
+    "confirmTypePrefix": "请输入 ",
+    "confirmTypeSuffix": " 以确认。"
   },
   "state": {
     "empty": "暂无数据",
