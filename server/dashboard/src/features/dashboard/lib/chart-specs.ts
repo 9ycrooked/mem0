@@ -9,6 +9,10 @@
  * 与参考实现的差异：
  *  - 主题色用本项目的 HSL 语义变量解析出的色值，而不是 new-api 的 dataScheme
  *  - 只实现本项目需要的最小 spec（饼图 / 面积图 / 柱状图），不做 sankey
+ *
+ * ⚠️ tooltip 的 key/value 必须传**回调函数**：
+ * VChart 把字符串当作常量文本渲染，写成 `{ key: "type", value: "value" }`
+ * 悬浮时只会原样显示 "type / value"，真实数值不会出现（2026-10-06 实测修复）。
  */
 
 import type {
@@ -39,11 +43,25 @@ export function pickColor(index: number, theme: ChartTheme): string {
   return palette[index % palette.length];
 }
 
+/**
+ * 从 tooltip 回调拿到的 datum 上安全取字段。
+ *
+ * VChart 的回调签名是 `(datum: Datum | undefined) => string`，而库里 `Datum`
+ * 的定义过宽（也可能是数组），直接写 `datum.value` 过不了 tsc。这里统一做一次
+ * 窄化，顺便把缺失字段收敛成空串，避免 tooltip 出现 "undefined"。
+ */
+export function datumField(datum: unknown, field: string): string {
+  if (datum === null || typeof datum !== "object") return "";
+  const value = (datum as Record<string, unknown>)[field];
+  return value === null || value === undefined ? "" : String(value);
+}
+
 /** 通用的饼图 spec。用于"分类分布"。 */
 export function buildPieSpec(
   buckets: readonly Bucket[],
   theme: ChartTheme,
   labelOf: (key: string) => string = (key) => key,
+  countLabel = "Count",
 ): IPieChartSpec {
   const values = buckets.map((bucket, index) => ({
     type: labelOf(bucket.key),
@@ -67,8 +85,8 @@ export function buildPieSpec(
       mark: {
         content: [
           {
-            key: "type",
-            value: "value",
+            key: countLabel,
+            value: (datum) => datumField(datum, "value"),
           },
         ],
       },
@@ -82,7 +100,7 @@ export function buildPieSpec(
 export function buildAreaSpec(
   trend: readonly TrendPoint[],
   theme: ChartTheme,
-  labelOf: (key: string) => string = (key) => key,
+  countLabel = "Count",
 ): IAreaChartSpec {
   const values = trend.map((point) => ({ Time: point.date, Count: point.count }));
 
@@ -104,8 +122,16 @@ export function buildAreaSpec(
       { orient: "left" as const, type: "linear" as const },
     ],
     tooltip: {
-      dimension: {
-        content: [{ key: "Count", value: "Count" }],
+      // 用 mark 而不是 dimension：dimension 会按系列聚合，而本图没有 seriesField，
+      // 实测表现为「悬浮一次就把全部日期的值刷成多行」。mark 只报悬浮到的那个点。
+      mark: {
+        title: { value: (datum) => datumField(datum, "Time") },
+        content: [
+          {
+            key: countLabel,
+            value: (datum) => datumField(datum, "Count"),
+          },
+        ],
       },
     },
     animation: true,
@@ -146,7 +172,12 @@ export function buildRankBarSpec(
     legends: { visible: false },
     tooltip: {
       mark: {
-        content: [{ key: "name", value: "value" }],
+        content: [
+          {
+            key: (datum) => datumField(datum, "name"),
+            value: (datum) => datumField(datum, "value"),
+          },
+        ],
       },
     },
     animation: true,

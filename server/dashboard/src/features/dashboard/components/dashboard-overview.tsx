@@ -208,7 +208,7 @@ export function DashboardOverview() {
               contentClassName="p-4 sm:p-5"
             >
               <Chart
-                spec={buildAreaSpec(summary?.writeTrend ?? [], theme)}
+                spec={buildAreaSpec(summary?.writeTrend ?? [], theme, t("chart.count"))}
                 className="h-64"
               />
             </PanelWrapper>
@@ -222,7 +222,12 @@ export function DashboardOverview() {
               contentClassName="p-4 sm:p-5"
             >
               <Chart
-                spec={buildPieSpec(summary?.categoryBuckets ?? [], theme)}
+                spec={buildPieSpec(
+                  summary?.categoryBuckets ?? [],
+                  theme,
+                  undefined,
+                  t("chart.count"),
+                )}
                 className="h-64"
               />
             </PanelWrapper>

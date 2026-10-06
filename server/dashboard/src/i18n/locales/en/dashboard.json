@@ -56,5 +56,8 @@
   },
   "unit": {
     "ms": "ms"
+  },
+  "chart": {
+    "count": "Count"
   }
 }

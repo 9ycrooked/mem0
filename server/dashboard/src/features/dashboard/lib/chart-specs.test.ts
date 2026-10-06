@@ -133,3 +133,54 @@ describe("buildRankBarSpec", () => {
     expect(loose(buildRankBarSpec(buckets, "light")).legends.visible).toBe(false);
   });
 });
+
+/**
+ * 回归测试：tooltip 的 key/value 传字符串时 VChart 按常量文本渲染，
+ * 悬浮只会显示 "type / value" 这样的字面量，真实数值不出现（线上实测 bug）。
+ * 因此这三处必须是函数。
+ */
+describe("tooltip 取值（回归）", () => {
+  const trend = [{ date: "2026-09-28", count: 569 }];
+
+  it("饼图的 value 是回调，能取到分组数量", () => {
+    const item = loose(buildPieSpec(buckets, "light")).tooltip.mark.content[0];
+    expect(typeof item.value).toBe("function");
+    expect(item.value({ value: 168 })).toBe("168");
+  });
+
+  it("饼图的数量标签可注入（跟随 i18n）", () => {
+    const item = loose(buildPieSpec(buckets, "light", undefined, "数量")).tooltip.mark
+      .content[0];
+    expect(item.key).toBe("数量");
+  });
+
+  it("面积图的 value 是回调，能取到当天数量", () => {
+    const item = loose(buildAreaSpec(trend, "light")).tooltip.mark.content[0];
+    expect(typeof item.value).toBe("function");
+    expect(item.value({ Count: 569 })).toBe("569");
+  });
+
+  it("面积图用 mark 模式：标题是当天日期（dimension 会一次列出全部点）", () => {
+    const tooltip = loose(buildAreaSpec(trend, "light")).tooltip;
+    expect(tooltip.dimension).toBeUndefined();
+    expect(tooltip.mark.title.value({ Time: "2026-09-28" })).toBe("2026-09-28");
+  });
+
+  it("面积图的数量标签可注入（跟随 i18n）", () => {
+    const item = loose(buildAreaSpec(trend, "light", "数量")).tooltip.mark.content[0];
+    expect(item.key).toBe("数量");
+  });
+
+  it("排行图的 key/value 都是回调，能取到路径与次数", () => {
+    const item = loose(buildRankBarSpec(buckets, "light")).tooltip.mark.content[0];
+    expect(item.key({ name: "/memories" })).toBe("/memories");
+    expect(item.value({ value: 76 })).toBe("76");
+  });
+
+  it("缺失字段回退为空串而不是抛异常", () => {
+    const pie = loose(buildPieSpec(buckets, "light")).tooltip.mark.content[0];
+    const area = loose(buildAreaSpec(trend, "light")).tooltip.mark.content[0];
+    expect(pie.value({})).toBe("");
+    expect(area.value({})).toBe("");
+  });
+});
