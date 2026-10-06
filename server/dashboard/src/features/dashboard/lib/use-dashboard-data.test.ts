@@ -135,4 +135,82 @@ describe("summarize", () => {
     expect(result.memoryCount).toBe(2);
     expect(result.recentMemories).toHaveLength(1);
   });
+
+  it("全部 current：有效记忆 = 总数，归档为 0", () => {
+    const data: DashboardData = {
+      memories: [
+        { id: "1", memory: "a", metadata: { status: "current" } },
+        { id: "2", memory: "b", metadata: { status: "current" } },
+      ],
+      entities: [],
+      requests: [],
+    };
+    const result = summarize(data, { start: null, end: null }, null);
+    expect(result.activeMemoryCount).toBe(result.memoryCount);
+    expect(result.archivedCount).toBe(0);
+  });
+
+  it("混入 historical：正确拆分，且 memoryCount 仍含归档", () => {
+    const data: DashboardData = {
+      memories: [
+        { id: "1", memory: "a", metadata: { status: "current" } },
+        { id: "2", memory: "b", metadata: { status: "historical" } },
+        { id: "3", memory: "c", metadata: { status: "historical" } },
+      ],
+      entities: [],
+      requests: [],
+    };
+    const result = summarize(data, { start: null, end: null }, null);
+    expect(result.memoryCount).toBe(3);
+    expect(result.activeMemoryCount).toBe(1);
+    expect(result.archivedCount).toBe(2);
+  });
+
+  it("缺少 status 字段的旧记录计入有效（?? current 兜底）", () => {
+    const data: DashboardData = {
+      memories: [
+        { id: "1", memory: "no metadata at all" },
+        { id: "2", memory: "metadata without status", metadata: {} },
+        { id: "3", memory: "archived", metadata: { status: "historical" } },
+      ],
+      entities: [],
+      requests: [],
+    };
+    const result = summarize(data, { start: null, end: null }, null);
+    expect(result.activeMemoryCount).toBe(2);
+    expect(result.archivedCount).toBe(1);
+  });
+
+  it("状态计数不受时间范围预设影响（状态是快照，不是时间序列）", () => {
+    const data: DashboardData = {
+      memories: [
+        {
+          id: "1",
+          memory: "old but active",
+          created_at: "2020-01-01T00:00:00Z",
+          metadata: { status: "current" },
+        },
+        {
+          id: "2",
+          memory: "old and archived",
+          created_at: "2020-01-01T00:00:00Z",
+          metadata: { status: "historical" },
+        },
+      ],
+      entities: [],
+      requests: [],
+    };
+    const all = summarize(data, { start: null, end: null }, null);
+    const today = summarize(
+      data,
+      { start: new Date("2026-10-06T00:00:00Z"), end: null },
+      1,
+    );
+    expect(all.activeMemoryCount).toBe(1);
+    expect(all.archivedCount).toBe(1);
+    // 切到「今日」后窗口内没有记忆，但状态计数必须保持不变
+    expect(today.activeMemoryCount).toBe(1);
+    expect(today.archivedCount).toBe(1);
+    expect(today.writeTrend.every((point) => point.count === 0)).toBe(true);
+  });
 });

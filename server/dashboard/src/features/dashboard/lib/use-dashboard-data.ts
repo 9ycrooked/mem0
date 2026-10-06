@@ -69,7 +69,16 @@ export interface DashboardData {
 
 /** 聚合后的视图模型，面板直接消费。 */
 export interface DashboardSummary {
+  /** 全部记忆（含归档）。保留给既有引用；不随时间窗口变化。 */
   memoryCount: number;
+  /**
+   * 有效记忆：`status !== "historical"` 的条数。
+   * 没有 `status` 字段的旧记录算作有效（`?? "current"` 兜底）。
+   * 与 `memoryCount` 一样是**全量快照**，不随时间范围预设变化。
+   */
+  activeMemoryCount: number;
+  /** 已归档（historical）条数 = memoryCount - activeMemoryCount。 */
+  archivedCount: number;
   entityCount: number;
   /** 实体列表（面板要逐条展示，不只是数量）。 */
   entities: EntityRecord[];
@@ -106,8 +115,20 @@ export function summarize(
     .sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""))
     .slice(0, 10);
 
+  // 状态是**快照**而不是时间序列：与 memoryCount 一样基于全量记忆，
+  // 不随时间范围预设变化（否则切到「今日」时归档数会变成 0）。
+  const statusOf = (memory: MemoryRecord): string => {
+    const status = memory.metadata?.status;
+    return typeof status === "string" && status !== "" ? status : "current";
+  };
+  const activeMemoryCount = data.memories.filter(
+    (memory) => statusOf(memory) !== "historical",
+  ).length;
+
   return {
     memoryCount: data.memories.length,
+    activeMemoryCount,
+    archivedCount: data.memories.length - activeMemoryCount,
     entityCount: data.entities.length,
     entities: data.entities,
     categoryBuckets: byCategory(data.memories),

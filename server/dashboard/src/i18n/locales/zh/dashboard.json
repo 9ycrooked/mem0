@@ -11,8 +11,9 @@
   "refresh": "刷新",
   "refreshing": "刷新中…",
   "metrics": {
-    "memories": "记忆总数",
-    "memoriesDesc": "当前保存的长期记忆条数",
+    "memories": "有效记忆",
+    "memoriesDesc": "不含归档（historical）的记忆条数",
+    "archived": "归档",
     "entities": "实体数",
     "entitiesDesc": "user / agent / run 的数量",
     "requests": "API 调用",
@@ -26,6 +27,10 @@
     "category": {
       "title": "分类分布",
       "description": "按 category 统计"
+    },
+    "status": {
+      "title": "记忆状态",
+      "description": "current / historical 分布"
     },
     "writeTrend": {
       "title": "写入趋势",

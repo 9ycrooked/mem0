@@ -139,12 +139,17 @@ export function DashboardOverview() {
             <StatCard
               title={t("metrics.memories")}
               description={t("metrics.memoriesDesc")}
-              value={formatNumber(summary?.memoryCount ?? 0)}
+              value={formatNumber(summary?.activeMemoryCount ?? 0)}
               icon={Database}
               tone="brand"
               loading={loading}
               error={error}
               sparkline={summary?.writeTrend.map((p) => p.count)}
+              details={
+                summary === null || summary.archivedCount <= 0
+                  ? undefined
+                  : [{ label: t("metrics.archived"), value: summary.archivedCount }]
+              }
             />
             <StatCard
               title={t("metrics.entities")}
@@ -224,6 +229,26 @@ export function DashboardOverview() {
               <Chart
                 spec={buildPieSpec(
                   summary?.categoryBuckets ?? [],
+                  theme,
+                  undefined,
+                  t("chart.count"),
+                )}
+                className="h-64"
+              />
+            </PanelWrapper>
+
+            {/* 记忆状态：current / historical 的快照，不随时间范围变化 */}
+            <PanelWrapper
+              title={t("panels.status.title")}
+              description={t("panels.status.description")}
+              loading={loading}
+              empty={!loading && (summary?.statusBuckets.length ?? 0) === 0}
+              emptyMessage={t("empty.noMemories")}
+              contentClassName="p-4 sm:p-5"
+            >
+              <Chart
+                spec={buildPieSpec(
+                  summary?.statusBuckets ?? [],
                   theme,
                   undefined,
                   t("chart.count"),

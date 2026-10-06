@@ -53,7 +53,10 @@ describe("中文解析", () => {
 
   it("dashboard 命名空间", () => {
     expect(resolve("title", "dashboard")).toBe("仪表盘");
-    expect(resolve("metrics.memories", "dashboard")).toBe("记忆总数");
+    // 2026-10-06：记忆卡片改为「有效记忆」口径（不含归档），并新增记忆状态面板
+    expect(resolve("metrics.memories", "dashboard")).toBe("有效记忆");
+    expect(resolve("metrics.archived", "dashboard")).toBe("归档");
+    expect(resolve("panels.status.title", "dashboard")).toBe("记忆状态");
   });
 
   it("auth 命名空间", () => {

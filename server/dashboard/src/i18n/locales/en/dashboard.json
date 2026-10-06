@@ -11,8 +11,9 @@
   "refresh": "Refresh",
   "refreshing": "Refreshing…",
   "metrics": {
-    "memories": "Memories",
-    "memoriesDesc": "Long-term memories currently stored",
+    "memories": "Active memories",
+    "memoriesDesc": "Excludes archived (historical) memories",
+    "archived": "Archived",
     "entities": "Entities",
     "entitiesDesc": "Number of user / agent / run records",
     "requests": "API calls",
@@ -26,6 +27,10 @@
     "category": {
       "title": "Category breakdown",
       "description": "Grouped by category"
+    },
+    "status": {
+      "title": "Memory status",
+      "description": "current / historical distribution"
     },
     "writeTrend": {
       "title": "Write trend",
